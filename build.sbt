@@ -1,4 +1,9 @@
 //import com.gu.SbtDistPlugin
+organization := "com.gu"
+
+name := "personalizationHack"
+
+version := "1.0"
 
 resolvers ++= Seq(
   "Sonatype OSS" at "http://oss.sonatype.org/content/repositories/releases/",
@@ -8,7 +13,7 @@ resolvers ++= Seq(
 
 scalaVersion := "2.9.1"
 
-//seq(sbtappengine.AppenginePlugin.webSettings :_*)
+seq(appengineSettings: _*)
 
 
 
@@ -25,7 +30,7 @@ libraryDependencies ++= Seq(
 )
 
 // and use this version of jetty for jetty run
-//libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "7.3.1.v20110307" % "jetty"
+libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "7.3.0.v20110203" % "container"
 
 //scalateTemplateDirectories in Compile <<= (baseDirectory) {
 //  (basedir) => Seq(new File(basedir, "/src/main/webapp/templates"))
