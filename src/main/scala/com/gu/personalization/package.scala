@@ -1,4 +1,4 @@
-package com.gu.personalization.dispatcher
+package com.gu.personalization
 
 import org.slf4j.LoggerFactory
 

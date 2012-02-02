@@ -1,7 +1,7 @@
-package com.gu.personalization.dispatcher
+package com.gu.personalization
+package dispatcher
 
 import org.scalatra.{ScalatraKernel, ScalatraFilter}
-import com.gu.personalization.api.Api
 
 class Dispatcher extends ScalatraFilter with ScalatraKernel with Logging {
 
@@ -9,10 +9,12 @@ class Dispatcher extends ScalatraFilter with ScalatraKernel with Logging {
     "HELLO WORLD"
   }
 
-  post("/profile/%s/createOrUpdatePersonalisation") {
-      val userProfileId = params.get("userProfileId").map(java.lang.Long.parseLong(_))
-      Api.Personalisation.save(userProfileId, params)
 
-    }
+  post("/saveProfile") {
+    val userId = params.getOrElse("userId", throw new Exception("missing userid"))
+    val terms = params.getOrElse("terms","")
+
+    model.Personalization.save(userId, terms)
+  }
 }
 
