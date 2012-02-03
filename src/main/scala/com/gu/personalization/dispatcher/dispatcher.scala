@@ -48,6 +48,22 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     terms
   }
 
+  get("/personalization/:userId/savedTagIds"){
+    val userId = params.getOrElse("userId", throw new Exception("missing userid"))
+    val terms = model.Personalization.get(userId).split(",")
+    try{
+      val tags = terms.map(ApiClient.getTagId(_)).mkString("\n")
+      tags
+
+    }catch{
+      case e => {
+        log.error(e.getMessage)
+        log.error(e.getStackTraceString)
+        terms
+      }
+    }
+  }
+
 
   def render(file: String, renderParams: Map[String, Any] = Map(), contentTypeHeader: String = "text/html;charset=UTF-8", cacheMaxAge: Int = 0) = {
     response.setHeader("Cache-Control", "public, max-age=%d" format cacheMaxAge)
