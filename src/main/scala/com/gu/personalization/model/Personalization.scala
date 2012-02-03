@@ -25,7 +25,11 @@ object Personalization {
       datastore.put(profile)
     }else{
       val profile = entityOption.get
-      profile.setProperty("terms", terms)
+      val currentTerms = profile.getProperty("terms")
+      
+      val builder = new StringBuilder()
+      builder.append(currentTerms).append(",").append(terms)
+      profile.setProperty("terms", builder.toString())
       datastore.put(profile)
     }
   }
