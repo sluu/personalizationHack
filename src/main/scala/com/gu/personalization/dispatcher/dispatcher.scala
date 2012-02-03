@@ -20,6 +20,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     val terms = multiParams.get("terms").getOrElse(Seq()).mkString(",").toLowerCase
 
     model.Personalization.save(userId, terms)
+    redirect(request.referrer.get)
   }
 
   get("/personalization/:userId"){
@@ -39,6 +40,12 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
         terms
       }
     }
+  }
+
+  get("/personalization/:userId/savedTags"){
+    val userId = params.getOrElse("userId", throw new Exception("missing userid"))
+    val terms = model.Personalization.get(userId).replaceAll(",","\n")
+    terms
   }
 
 
@@ -71,10 +78,14 @@ object ApiClient extends Api with JavaNetHttp with Logging  {
   }
 
   def getTagId(term : String) : String = {
+
+    log.info(term)
     val apiRequest = Api.tags
                         .tagType(term)
     val firstResult : Option[com.gu.openplatform.contentapi.model.Tag] = apiRequest.results.headOption
-    firstResult.map(_.id).getOrElse("")
+    val tagId = firstResult.map(_.id).getOrElse("")
+    log.info(tagId)
+    tagId
   }
 
 }
