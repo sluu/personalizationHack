@@ -1,0 +1,14 @@
+<%@ val userid : String %>
+<%@ val content: List[com.gu.openplatform.contentapi.model.Content] %>
+
+<html>
+<head>
+<title>Personalized page for ${userid}</title>
+</head>
+<body>
+#for (c <- content)
+    ${c.webTitle}
+    <img src="${c.thumbnail}" />
+#end
+</body>
+</html>
