@@ -105,7 +105,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
   def articleHtml(article: com.gu.openplatform.contentapi.model.Content) : String = {
     log.info(article.webTitle)
     val divstyle = "<div style=\"border-bottom: 1px dotted #000000; width: 300px;\">"
-    val pstyle="<p style=\"height:200\">"
+    val pstyle="<p style=\"height:90\">"
     val titleLink = pstyle+"<a style=\"text-decoration: none;color: #005689;font-size: 12px;font-family: arial,sans-serif;\" href=\""+article.webUrl+"\">"+article.webTitle+"</a></p>\n"
     val thumbnail = article.fields.flatMap(_.get("thumbnail"))
     if(!thumbnail.isEmpty){
@@ -123,7 +123,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     val result = renderParams.get("result").get.asInstanceOf[Map[String, List[Content]]]
     val content = new StringBuilder()
     for ((key, value) <- result) {
-      content.append("<h1>").append(key).append("</h1>")
+      content.append("<p style=\"font-family:georgia.serif;font-size:18px;font-weight:400;color=#005689\">").append(key).append("</p>")
       content.append(value.map(articleHtml(_)).mkString).append(" <br> ")
     }
 
