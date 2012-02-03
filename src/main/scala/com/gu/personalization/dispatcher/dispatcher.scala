@@ -69,20 +69,21 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     response.setHeader("Cache-Control", "public, max-age=%d" format cacheMaxAge)
     contentType = contentTypeHeader
     //templateEngine.layout("/WEB-INF/scalate/%s.ssp" format file, renderParams)
-    val htmlString = "<html><head><title></title></head><body>" +
+    val htmlString = "<html><head><title></title></head><body><ol>" +
       renderParams.get("content").get.asInstanceOf[List[com.gu.openplatform.contentapi.model.Content]].map(articleHtml(_)).mkString(" <br> ") +
-      "</body></html>"
+      "</ol></body></html>"
     htmlString
   }
 
 
   def articleHtml(article: com.gu.openplatform.contentapi.model.Content) : String = {
-    val titleLink = "<a href=\""+article.webUrl+"\">"+article.webTitle+"</a><br>\n"
+    log.info(article.webTitle)
+    val titleLink = "<hr><br><a style=\"text-decoration: none;color: #005689;\" href=\""+article.webUrl+"\">"+article.webTitle+"</a>\n"
     val thumbnail = article.fields.flatMap(_.get("thumbnail"))
     if(!thumbnail.isEmpty){
-      titleLink+"<img src=\""+thumbnail.get+"\"/><br>\n"
+      "<li>"+"<img src=\""+thumbnail.get+"\"/>\n"+titleLink+"</li>"
     }
-    else  titleLink
+    else "<li>"+titleLink+"</li>"
 
 
   }
