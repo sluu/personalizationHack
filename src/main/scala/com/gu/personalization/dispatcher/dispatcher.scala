@@ -77,10 +77,10 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
 
 
   def articleHtml(article: com.gu.openplatform.contentapi.model.Content) : String = {
-    val titleLink = "<a href="+article.webUrl+">"+article.webTitle+"</a><br>\n"
-    val thumbnail = article.fields.map(_.get("thumbnail"))
+    val titleLink = "<a href=\""+article.webUrl+"\">"+article.webTitle+"</a><br>\n"
+    val thumbnail = article.fields.flatMap(_.get("thumbnail"))
     if(!thumbnail.isEmpty){
-      titleLink+"<img src="+thumbnail.get+"/><br>\n"
+      titleLink+"<img src=\""+thumbnail.get+"\"/><br>\n"
     }
     else  titleLink
 
