@@ -70,9 +70,21 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     contentType = contentTypeHeader
     //templateEngine.layout("/WEB-INF/scalate/%s.ssp" format file, renderParams)
     val htmlString = "<html><head><title></title></head><body>" +
-      renderParams.get("content").get.asInstanceOf[List[com.gu.openplatform.contentapi.model.Content]].map(_.webTitle).mkString(" <br> ") +
+      renderParams.get("content").get.asInstanceOf[List[com.gu.openplatform.contentapi.model.Content]].map(articleHtml(_)).mkString(" <br> ") +
       "</body></html>"
     htmlString
+  }
+
+
+  def articleHtml(article: com.gu.openplatform.contentapi.model.Content) : String = {
+    val titleLink = "<a href="+article.webUrl+">"+article.webTitle+"</a><br>\n"
+    val img = "<img src="+article.fields.map(_.get("thumbnail")).mkString+"/><br>\n"
+    if(!img.isEmpty){
+      titleLink+img
+    }
+    else  titleLink
+
+
   }
 
 }
@@ -97,7 +109,7 @@ object ApiClient extends Api with JavaNetHttp with Logging  {
 
     log.info(term)
     val apiRequest = Api.tags
-                        .tag(term)
+                    .q(term)
     val firstResult : Option[com.gu.openplatform.contentapi.model.Tag] = apiRequest.results.headOption
     val tagId = firstResult.map(_.id).getOrElse("")
     log.info(tagId)
