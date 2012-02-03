@@ -95,9 +95,9 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     response.setHeader("Cache-Control", "public, max-age=%d" format cacheMaxAge)
     contentType = contentTypeHeader
     //templateEngine.layout("/WEB-INF/scalate/%s.ssp" format file, renderParams)
-    val htmlString = "<html><head><title></title></head><body><h1>IGuardian</h1><div><ul>" +
+    val htmlString = "<html><head><title></title></head><body><p style=\"background-color: #0061a6; width=300px\"><h1 >IGuardian</h1></p>" +
       renderParams.get("content").get.asInstanceOf[List[com.gu.openplatform.contentapi.model.Content]].map(articleHtml(_)).mkString("") +
-      "</div></body></html>"
+      "</body></html>"
     htmlString
   }
 
@@ -105,7 +105,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
   def articleHtml(article: com.gu.openplatform.contentapi.model.Content) : String = {
     log.info(article.webTitle)
     val divstyle = "<div style=\"border-bottom: 1px dotted #000000; width: 300px;\">"
-    val pstyle="<p style=\"height:90\">"
+    val pstyle="<p style=\"height:90px; margin-left=10px;\">"
     val titleLink = pstyle+"<a style=\"text-decoration: none;color: #005689;font-size: 12px;font-family: arial,sans-serif;\" href=\""+article.webUrl+"\">"+article.webTitle+"</a></p>\n"
     val thumbnail = article.fields.flatMap(_.get("thumbnail"))
     if(!thumbnail.isEmpty){
@@ -127,7 +127,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
       content.append(value.map(articleHtml(_)).mkString).append(" <br> ")
     }
 
-    val htmlString = "<html><head><title></title></head><body><h1>IGuardian</h1>" + content.toString()+
+    val htmlString = "<html><head><title></title></head><body><p style=\"background-color=#0061a6; width:300px\"><h1 >IGuardian</h1></p>" + content.toString()+
       "</body></html>"
     htmlString
   }
