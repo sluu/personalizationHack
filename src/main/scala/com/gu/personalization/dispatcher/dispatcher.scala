@@ -95,7 +95,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     response.setHeader("Cache-Control", "public, max-age=%d" format cacheMaxAge)
     contentType = contentTypeHeader
     //templateEngine.layout("/WEB-INF/scalate/%s.ssp" format file, renderParams)
-    val htmlString = "<html><head><title></title></head><body><p style=\"background-color: #0061a6; width=300px\"><h1 >IGuardian</h1></p>" +
+    val htmlString = "<html><head><title></title></head><body><p style=\"background-color: #0061a6; width=300px\"><h1 >IGuardian (results by date)</h1></p>" +
       renderParams.get("content").get.asInstanceOf[List[com.gu.openplatform.contentapi.model.Content]].map(articleHtml(_)).mkString("") +
       "</body></html>"
     htmlString
@@ -127,7 +127,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
       content.append(value.map(articleHtml(_)).mkString).append(" <br> ")
     }
 
-    val htmlString = "<html><head><title></title></head><body><p style=\"background-color=#0061a6; width:300px\"><h1 >IGuardian</h1></p>" + content.toString()+
+    val htmlString = "<html><head><title></title></head><body><p style=\"background-color=#0061a6; width:300px\"><h1 >IGuardian (results by tag)</h1></p>" + content.toString()+
       "</body></html>"
     htmlString
   }
