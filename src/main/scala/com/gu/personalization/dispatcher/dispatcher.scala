@@ -7,6 +7,7 @@ import scala.collection.JavaConversions._
 import com.gu.openplatform.contentapi.model.Content
 import com.gu.openplatform.contentapi.connection.JavaNetHttp
 import org.scalatra.scalate.ScalateSupport
+import collection.immutable.HashMap
 
 class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
 
@@ -41,6 +42,31 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
       }
     }
   }
+
+  get("/personalization2/:userId"){
+      val userId = params.getOrElse("userId", throw new Exception("missing userid"))
+      val terms = model.Personalization.get(userId).split(",")
+      var result = Map[String, List[Content]]()
+      try{
+        terms.foreach(term => {
+          val tag = ApiClient.getTagId(term)
+          val content = ApiClient.searchApi(tag)
+          result += term -> content
+        })
+
+        val renderParams = Map("result" -> result, "userid" -> userId)
+        
+        render2(renderParams)
+        
+
+      }catch{
+        case e => {
+          log.error(e.getMessage)
+          log.error(e.getStackTraceString)
+          terms
+        }
+      }
+    }
 
   get("/personalization/:userId/savedTags"){
     val userId = params.getOrElse("userId", throw new Exception("missing userid"))
@@ -87,6 +113,22 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
     else pstyle+titleLink+"</p></li>"
 
 
+  }
+  
+  def render2(renderParams: Map[String, Any] = Map(), contentTypeHeader: String = "text/html;charset=UTF-8", cacheMaxAge: Int = 0) = {
+    response.setHeader("Cache-Control", "public, max-age=%d" format cacheMaxAge)
+    contentType = contentTypeHeader
+
+    val result = renderParams.get("result").get.asInstanceOf[Map[String, List[Content]]]
+    val content = new StringBuilder()
+    for ((key, value) <- result) {
+      content.append("<h1>").append(key).append("</h1>")
+      content.append(value.map(articleHtml(_)).mkString).append(" <br> ")
+    }
+
+    val htmlString = "<html><head><title></title></head><body>" + content.toString()+
+      "</body></html>"
+    htmlString
   }
 
 }
