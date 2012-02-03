@@ -97,7 +97,7 @@ object ApiClient extends Api with JavaNetHttp with Logging  {
 
     log.info(term)
     val apiRequest = Api.tags
-                        .tagType(term)
+                        .tag(term)
     val firstResult : Option[com.gu.openplatform.contentapi.model.Tag] = apiRequest.results.headOption
     val tagId = firstResult.map(_.id).getOrElse("")
     log.info(tagId)
