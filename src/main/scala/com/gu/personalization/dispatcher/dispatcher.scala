@@ -50,7 +50,7 @@ class Dispatcher extends ScalatraFilter with ScalateSupport with Logging {
       try{
         terms.foreach(term => {
           val tag = ApiClient.getTagId(term)
-          val content = ApiClient.searchApi(tag)
+          val content = ApiClient.searchApiWithLimit(tag, Some(3))
           result += term -> content
         })
 
@@ -148,6 +148,18 @@ object ApiClient extends Api with JavaNetHttp with Logging  {
     apiRequest.results
 
   }
+
+  def searchApiWithLimit(tagstring : String, pageSize: Option[Int]) : List[Content]  = {
+
+      log.info(tagstring)
+      val apiRequest = Api.search
+                        .tag(tagstring)
+                        .showFields("all")
+                        .pageSize(pageSize.getOrElse(10))
+
+      apiRequest.results
+
+    }
 
   def getTagId(term : String) : String = {
 
